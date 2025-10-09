@@ -1,0 +1,10 @@
+version: '3.8'
+
+services:
+  webserver:
+    image: httpd:latest
+    container_name: httpd
+    ports:
+      - "8088:80"
+    volumes:
+      - /opt/devops:/usr/local/apache2/htdocs
