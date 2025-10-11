@@ -1,0 +1,8 @@
+version: '3.8'
+
+services:
+  app:
+    image: nautilus/python-app
+    container_name: pythonapp_nautilus
+    ports:
+      - "8093:5002"
