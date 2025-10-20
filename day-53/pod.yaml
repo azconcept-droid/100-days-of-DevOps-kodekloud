@@ -1,0 +1,135 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  annotations:
+    kubectl.kubernetes.io/last-applied-configuration: |
+      {"apiVersion":"v1","kind":"Pod","metadata":{"annotations":{},"labels":{"app":"php-app"},"name":"nginx-phpfpm","namespace":"default"},"spec":{"containers":[{"image":"php:7.2-fpm-alpine","name":"php-fpm-container","volumeMounts":[{"mountPath":"/var/www/html","name":"shared-files"}]},{"image":"nginx:latest","name":"nginx-container","volumeMounts":[{"mountPath":"/usr/share/nginx/html","name":"shared-files"},{"mountPath":"/etc/nginx/nginx.conf","name":"nginx-config-volume","subPath":"nginx.conf"}]}],"volumes":[{"emptyDir":{},"name":"shared-files"},{"configMap":{"name":"nginx-config"},"name":"nginx-config-volume"}]}}
+  creationTimestamp: "2025-10-20T10:29:36Z"
+  labels:
+    app: php-app
+  name: nginx-phpfpm
+  namespace: default
+  resourceVersion: "1180"
+  uid: c0a553c5-fabb-49a3-930c-5c2e5f65fc5e
+spec:
+  containers:
+  - image: php:7.2-fpm-alpine
+    imagePullPolicy: IfNotPresent
+    name: php-fpm-container
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /var/www/html
+      name: shared-files
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-8bwlq
+      readOnly: true
+  - image: nginx:latest
+    imagePullPolicy: Always
+    name: nginx-container
+    resources: {}
+    terminationMessagePath: /dev/termination-log
+    terminationMessagePolicy: File
+    volumeMounts:
+    - mountPath: /usr/share/nginx/html
+      name: shared-files
+    - mountPath: /etc/nginx/nginx.conf
+      name: nginx-config-volume
+      subPath: nginx.conf
+    - mountPath: /var/run/secrets/kubernetes.io/serviceaccount
+      name: kube-api-access-8bwlq
+      readOnly: true
+  dnsPolicy: ClusterFirst
+  enableServiceLinks: true
+  nodeName: kodekloud-control-plane
+  preemptionPolicy: PreemptLowerPriority
+  priority: 0
+  restartPolicy: Always
+  schedulerName: default-scheduler
+  securityContext: {}
+  serviceAccount: default
+  serviceAccountName: default
+  terminationGracePeriodSeconds: 30
+  tolerations:
+  - effect: NoExecute
+    key: node.kubernetes.io/not-ready
+    operator: Exists
+    tolerationSeconds: 300
+  - effect: NoExecute
+    key: node.kubernetes.io/unreachable
+    operator: Exists
+    tolerationSeconds: 300
+  volumes:
+  - emptyDir: {}
+    name: shared-files
+  - configMap:
+      defaultMode: 420
+      name: nginx-config
+    name: nginx-config-volume
+  - name: kube-api-access-8bwlq
+    projected:
+      defaultMode: 420
+      sources:
+      - serviceAccountToken:
+          expirationSeconds: 3607
+          path: token
+      - configMap:
+          items:
+          - key: ca.crt
+            path: ca.crt
+          name: kube-root-ca.crt
+      - downwardAPI:
+          items:
+          - fieldRef:
+              apiVersion: v1
+              fieldPath: metadata.namespace
+            path: namespace
+status:
+  conditions:
+  - lastProbeTime: null
+    lastTransitionTime: "2025-10-20T10:29:36Z"
+    status: "True"
+    type: Initialized
+  - lastProbeTime: null
+    lastTransitionTime: "2025-10-20T10:29:48Z"
+    status: "True"
+    type: Ready
+  - lastProbeTime: null
+    lastTransitionTime: "2025-10-20T10:29:48Z"
+    status: "True"
+    type: ContainersReady
+  - lastProbeTime: null
+    lastTransitionTime: "2025-10-20T10:29:36Z"
+    status: "True"
+    type: PodScheduled
+  containerStatuses:
+  - containerID: containerd://d7872b66989d1443e4e2bb22b13cd5c23b105ee6affb4a2d4b038d8f29ed4661
+    image: docker.io/library/nginx:latest
+    imageID: docker.io/library/nginx@sha256:3b7732505933ca591ce4a6d860cb713ad96a3176b82f7979a8dfa9973486a0d6
+    lastState: {}
+    name: nginx-container
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2025-10-20T10:29:47Z"
+  - containerID: containerd://3ef125bf2dacc85c3b58ae2e02ac111b1fc9d07c85b987a34d840cc3887664ad
+    image: docker.io/library/php:7.2-fpm-alpine
+    imageID: docker.io/library/php@sha256:2e2d92415f3fc552e9a62548d1235f852c864fcdc94bcf2905805d92baefc87f
+    lastState: {}
+    name: php-fpm-container
+    ready: true
+    restartCount: 0
+    started: true
+    state:
+      running:
+        startedAt: "2025-10-20T10:29:39Z"
+  hostIP: 172.17.0.2
+  phase: Running
+  podIP: 10.244.0.5
+  podIPs:
+  - ip: 10.244.0.5
+  qosClass: BestEffort
+  startTime: "2025-10-20T10:29:36Z"
